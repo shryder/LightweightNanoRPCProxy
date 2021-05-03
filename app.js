@@ -2,7 +2,15 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 
-let STATS = require('./logs.json');
+const LOGS_FILE = "./logs.json";
+
+if (!fs.existsSync(LOGS_FILE)) {
+	console.info("Log file not found, creating...");
+	fs.writeFileSync(LOGS_FILE, JSON.stringify({}));
+	console.info("Log file created!");
+}
+
+let STATS = require(LOGS_FILE);
 
 const {
 	AVAILABLE_ACTIONS,
@@ -52,7 +60,7 @@ function getUserByToken(token) {
 if (LOG_DATA) {
 	// Save logs every 10 minutes
 	setInterval(() => {
-		fs.writeFile('logs.json', JSON.stringify(STATS), (err) => {
+		fs.writeFile('logs.json', JSON.stringify(STATS, null, "\t"), (err) => {
 			if (err) {
 				console.error("Error writing stats to file.", err);
 			}
@@ -82,7 +90,7 @@ async function handleRPCRequest(req, res) {
 			}
 		});
 	}
-	
+
 	if(!("action" in req.body)) {
 		return res.status(422).json({
 			message: "Action field is required"
