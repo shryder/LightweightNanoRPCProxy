@@ -71,6 +71,13 @@ if (LOG_DATA) {
 async function handleRPCRequest(req, res) {
     res.set(DEFAULT_HEADERS);
 
+	let body = {};
+	if (req.method === "POST") {
+		body = req.body;
+	} else if (req.method === "GET") {
+		body = req.query;
+	}
+
 	if (LOG_DATA) {
 		res.on('finish', function(e){
 			if(req.ip in STATS) {
@@ -91,13 +98,13 @@ async function handleRPCRequest(req, res) {
 		});
 	}
 
-	if(!("action" in req.body)) {
+	if(!("action" in body)) {
 		return res.status(422).json({
 			message: "Action field is required"
 		});
 	}
 
-	const action = req.body.action;
+	const action = body.action;
 	const authorization_header = req.header('Authorization');
 
 	let allowed_actions = [...AVAILABLE_ACTIONS];
@@ -132,7 +139,7 @@ async function handleRPCRequest(req, res) {
 		});
 	}
 
-	let params = Object.assign({ }, req.body);
+	let params = Object.assign({ }, body);
 	delete params.action;
 
 	const rpc_response = await client._send(action, params);
