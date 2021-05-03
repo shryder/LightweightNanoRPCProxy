@@ -19,7 +19,8 @@ const {
 	PORT,
 	API_ROUTE,
 	NODE_RPC,
-	LOG_DATA
+	LOG_DATA,
+	TRUST_PROXY
 } = require('./config.json');
 
 const DEFAULT_HEADERS = {
@@ -38,7 +39,10 @@ const NanoClient = require('nano-node-rpc');
 const client = new NanoClient({ url: NODE_RPC });
 
 app.use(express.json());
-app.set('trust proxy', 'loopback');
+
+if (TRUST_PROXY) {
+	app.set('trust proxy', true);
+}
 
 function setRateLimitHeaders(res, rateLimiterRes) {
 	res.set({
@@ -150,7 +154,8 @@ app.get('/', (req, res) => {
 	return res.json({
 		message: "RPC requests are supposed to be sent to " + API_ROUTE
 	});
-})
+});
+
 app.get(API_ROUTE, handleRPCRequest);
 app.post(API_ROUTE, handleRPCRequest);
 

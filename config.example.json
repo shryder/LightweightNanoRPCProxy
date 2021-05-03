@@ -3,6 +3,7 @@
     "NODE_RPC": "http://127.0.0.1:7076",
     "API_ROUTE": "/api",
     "PORT": 8888,
+    "TRUST_PROXY": false,
     "AVAILABLE_ACTIONS": [
         "account_balance",
         "account_info",

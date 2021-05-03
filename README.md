@@ -17,6 +17,7 @@ node app.js
 ## Configurable options
 
 * `LOG_DATA`: Logs the returned HTTP statuses that each user received and first/last request date.
+* `TRUST_PROXY`: Enable this if you're behind a reverse proxy like nginx & cloudflare.
 * `NODE_RPC`: Node RPC url.
 * `API_ROUTE`: Customize target api route.
 * `PORT`: Port this proxy web server will run.
