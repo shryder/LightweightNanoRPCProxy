@@ -55,5 +55,8 @@
         "extra_available_actions": [
             "telemetry"
         ]
-    }]
+    }],
+    "SUPER_IPS": [
+        "::1"
+    ]
 }

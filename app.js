@@ -20,7 +20,8 @@ const {
 	API_ROUTE,
 	NODE_RPC,
 	LOG_DATA,
-	TRUST_PROXY
+	TRUST_PROXY,
+	SUPER_IPS
 } = require('./config.json');
 
 const DEFAULT_HEADERS = {
@@ -113,27 +114,29 @@ async function handleRPCRequest(req, res) {
 
 	let allowed_actions = [...AVAILABLE_ACTIONS];
 
-	if(authorization_header) {
-		let user = getUserByToken(authorization_header);
-
-		if (user) {
-			allowed_actions.concat(user.extra_available_actions);
-		} else {
-			return res.status(403).json({
-				message: "Invalid authorization token provided."
-			});
-		}
-	} else {
-		try {
-			const rateLimiterRes = await rateLimiter.consume(req.ip, 1);
+	if (!SUPER_IPS.includes(req.ip)) {
+		if (authorization_header) {
+			let user = getUserByToken(authorization_header);
 	
-			setRateLimitHeaders(res, rateLimiterRes);
-		} catch(rateLimiterRes) {
-			setRateLimitHeaders(res, rateLimiterRes);
-
-			return res.status(429).json({
-				message: "Too Many Requests"
-			});
+			if (user) {
+				allowed_actions.concat(user.extra_available_actions);
+			} else {
+				return res.status(403).json({
+					message: "Invalid authorization token provided."
+				});
+			}
+		} else {
+			try {
+				const rateLimiterRes = await rateLimiter.consume(req.ip, 1);
+	
+				setRateLimitHeaders(res, rateLimiterRes);
+			} catch (rateLimiterRes) {
+				setRateLimitHeaders(res, rateLimiterRes);
+	
+				return res.status(429).json({
+					message: "Too Many Requests"
+				});
+			}
 		}
 	}
 
