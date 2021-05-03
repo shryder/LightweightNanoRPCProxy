@@ -128,9 +128,7 @@ async function handleRPCRequest(req, res) {
 	delete params.action;
 
 	const rpc_response = await client._send(action, params);
-	return res.json({
-		message: "wicked"
-	});
+	return res.json(rpc_response);
 }
 
 app.get(API_ROUTE, handleRPCRequest);
