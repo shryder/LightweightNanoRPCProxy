@@ -24,8 +24,8 @@ const {
 } = require('./config.json');
 
 const DEFAULT_HEADERS = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+	'Access-Control-Allow-Origin': '*',
+	'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
 	'Content-Type': 'application/json'
 };
 
@@ -73,7 +73,7 @@ if (LOG_DATA) {
 }
 
 async function handleRPCRequest(req, res) {
-    res.set(DEFAULT_HEADERS);
+	res.set(DEFAULT_HEADERS);
 
 	let body = {};
 	if (req.method === "POST") {
