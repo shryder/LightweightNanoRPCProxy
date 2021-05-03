@@ -1,0 +1,16 @@
+{
+  "name": "lightweightnanorpcproxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shryder",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nano-node-rpc": "^0.3.1",
+    "rate-limiter-flexible": "^2.2.1"
+  }
+}
