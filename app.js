@@ -63,14 +63,12 @@ function getUserByToken(token) {
 }
 
 if (LOG_DATA) {
-	// Save logs every 10 minutes
+	// Save logs every 1 minute
 	setInterval(() => {
 		fs.writeFile('logs.json', JSON.stringify(STATS, null, "\t"), (err) => {
-			if (err) {
-				console.error("Error writing stats to file.", err);
-			}
+			if (err) console.error("Error writing stats to file.", err);
 		});
-	}, 10 * 60 * 1000);
+	}, 60 * 1000);
 }
 
 async function handleRPCRequest(req, res) {
@@ -103,7 +101,7 @@ async function handleRPCRequest(req, res) {
 		});
 	}
 
-	if(!("action" in body)) {
+	if (!("action" in body)) {
 		return res.status(422).json({
 			message: "Action field is required"
 		});
