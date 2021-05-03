@@ -146,6 +146,11 @@ async function handleRPCRequest(req, res) {
 	return res.json(rpc_response);
 }
 
+app.get('/', (req, res) => {
+	return res.json({
+		message: "RPC requests are supposed to be sent to " + API_ROUTE
+	});
+})
 app.get(API_ROUTE, handleRPCRequest);
 app.post(API_ROUTE, handleRPCRequest);
 
