@@ -29,3 +29,7 @@ node app.js
   * `extra_available_actions`: You can add extra actions that this user can run.
   * **NOTE: All authorized users bypass the rate limiter completely.**
 * `SUPER_IPS`: Array of IPs that will not use the rate limiter.
+
+## Extra
+
+You can run `node preview_logs.js` if you want to view the logs. 
