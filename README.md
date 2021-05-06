@@ -28,3 +28,4 @@ node app.js
   * `token`: Randomly generated token that is supposed to be sent in the Authorization header (eg: `Authorization: random_string_here`)
   * `extra_available_actions`: You can add extra actions that this user can run.
   * **NOTE: All authorized users bypass the rate limiter completely.**
+* `SUPER_IPS`: Array of IPs that will not use the rate limiter.
