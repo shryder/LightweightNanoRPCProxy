@@ -147,8 +147,14 @@ async function handleRPCRequest(req, res) {
 	let params = Object.assign({ }, body);
 	delete params.action;
 
-	const rpc_response = await client._send(action, params);
-	return res.json(rpc_response);
+	try {
+		const rpc_response = await client._send(action, params);
+		return res.json(rpc_response);
+	} catch (e) {
+		return res.status(503).json({
+			error: "Something wrong happened, maybe the NANO node is currently down"
+		})
+	}
 }
 
 app.get('/', (req, res) => {
