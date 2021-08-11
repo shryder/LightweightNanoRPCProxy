@@ -4,6 +4,17 @@
     "API_ROUTE": "/api",
     "PORT": 8888,
     "TRUST_PROXY": false,
+    "MAX_ACTIONS_COUNT": {
+        "account_history": 500,
+        "chain": 500,
+        "frontiers": 500,
+        "pending": 500
+    },
+    "MAX_REQUESTED_ACCOUNTS_COUNT": {
+        "accounts_frontiers": 2,
+        "accounts_pending": 2,
+        "accounts_balances": 2
+    },
     "AVAILABLE_ACTIONS": [
         "account_history",
         "account_info",
@@ -24,7 +35,6 @@
         "blocks_info",
         "chain",
         "confirmation_quorum",
-        "delegators",
         "delegators_count",
         "frontiers",
         "key_create",

@@ -29,6 +29,8 @@ node app.js
   * `extra_available_actions`: You can add extra actions that this user can run.
   * **NOTE: All authorized users bypass the rate limiter completely.**
 * `SUPER_IPS`: Array of IPs that will not use the rate limiter.
+* `MAX_ACTIONS_COUNT`: Limit the value of the "count" parameter for selected actions
+* `MAX_REQUESTED_ACCOUNTS_COUNT`: Limit the amount of the "accounts" array for selected actions
 
 ## Extra
 

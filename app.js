@@ -21,7 +21,9 @@ const {
 	NODE_RPC,
 	LOG_DATA,
 	TRUST_PROXY,
-	SUPER_IPS
+	SUPER_IPS,
+	MAX_ACTIONS_COUNT,
+	MAX_REQUESTED_ACCOUNTS_COUNT
 } = require('./config.json');
 
 const DEFAULT_HEADERS = {
@@ -52,6 +54,10 @@ function setRateLimitHeaders(res, rateLimiterRes) {
 		"X-RateLimit-Remaining": rateLimiterRes.remainingPoints,
 		"X-RateLimit-Reset": new Date(Date.now() + rateLimiterRes.msBeforeNext)
 	});
+}
+
+function clamp(number, min, max) {
+	return Math.max(min, Math.min(number, max));
 }
 
 /**
@@ -115,9 +121,9 @@ async function handleRPCRequest(req, res) {
 	if (!SUPER_IPS.includes(req.ip)) {
 		if (authorization_header) {
 			let user = getUserByToken(authorization_header);
-	
+
 			if (user) {
-				allowed_actions.concat(user.extra_available_actions);
+				allowed_actions = allowed_actions.concat(user.extra_available_actions);
 			} else {
 				return res.status(403).json({
 					message: "Invalid authorization token provided."
@@ -147,21 +153,34 @@ async function handleRPCRequest(req, res) {
 	let params = Object.assign({ }, body);
 	delete params.action;
 
+	// Make sure "count" param is not too high for configured actions
+	if (action in MAX_ACTIONS_COUNT && !isNaN(MAX_ACTIONS_COUNT[action])) {
+		params.count = clamp(params.count, 0, MAX_ACTIONS_COUNT[action]);
+	}
+
+	// Make sure "accounts" array does not have too high amount of accounts for configured actions
+	if (action in MAX_REQUESTED_ACCOUNTS_COUNT && !isNaN(MAX_REQUESTED_ACCOUNTS_COUNT[action])) {
+		params.accounts = params.accounts.slice(0, MAX_REQUESTED_ACCOUNTS_COUNT[action]);
+	}
+
 	try {
 		const rpc_response = await client._send(action, params);
 		return res.json(rpc_response);
 	} catch (e) {
 		return res.status(503).json({
 			error: "Something wrong happened, maybe the NANO node is currently down"
-		})
+		});
 	}
 }
 
-app.get('/', (req, res) => {
-	return res.json({
-		message: "RPC requests are supposed to be sent to " + API_ROUTE
+if (API_ROUTE !== "/") {
+	app.get('/', (req, res) => {
+		return res.json({
+			message: "RPC requests are supposed to be sent to " + API_ROUTE
+		});
 	});
-});
+}
+
 
 app.get(API_ROUTE, handleRPCRequest);
 app.post(API_ROUTE, handleRPCRequest);
